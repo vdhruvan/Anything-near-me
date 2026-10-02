@@ -74,7 +74,14 @@ async function main() {
   console.log('Remote "origin" set to https://github.com/vdhruvan/Anything-near-me.git');
 
   // 5. Ensure branch main
-  await git.branch({ fs, dir: projectDir, ref: 'main', checkout: true });
+  try {
+    const branches = await git.listBranches({ fs, dir: projectDir });
+    if (!branches.includes('main')) {
+      await git.branch({ fs, dir: projectDir, ref: 'main', checkout: true });
+    }
+  } catch (e) {
+    // Branch may already be current
+  }
   console.log('Active branch set to main.');
 }
 
