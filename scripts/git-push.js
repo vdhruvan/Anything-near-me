@@ -6,13 +6,16 @@ import http from 'isomorphic-git/http/node';
 const projectDir = path.resolve('.');
 
 async function push() {
-  const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
+  const token = process.argv[2] || process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 
   console.log(`Pushing branch 'main' to https://github.com/vdhruvan/Anything-near-me.git...`);
   if (token) {
-    console.log('Using provided GitHub token for authentication.');
+    console.log('Authenticating with GitHub Personal Access Token...');
   } else {
-    console.log('No GITHUB_TOKEN environment variable found. Checking default push...');
+    console.log('No GitHub token provided.');
+    console.log('To push to GitHub, supply a token:');
+    console.log('  node scripts/git-push.js <YOUR_GITHUB_TOKEN>');
+    console.log('  or set $env:GITHUB_TOKEN="<YOUR_TOKEN>" and run npm run push');
   }
 
   const pushResult = await git.push({
